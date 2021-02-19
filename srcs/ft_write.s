@@ -1,8 +1,8 @@
-extern ___error
+extern __errno_location
 
-global _ft_write
+global ft_write
 
-%define SYS_write 0x2000004
+%define SYS_write 1
 
 ; ssize_t write(int fildes, const void *buf, size_t nbyte)
 ;
@@ -11,13 +11,15 @@ global _ft_write
 ft_write:
 	mov		rax, SYS_write
 	syscall
-	jc		_ft_write_error
+	cmp		rax, 0
+	jl		_ft_write_error
 	ret
 
 _ft_write_error:
 	push	rbx
+	neg  	rax
 	mov		rbx, rax
-	call	___error
+	call	__errno_location wrt ..plt
 	mov		[rax], rbx
 	pop		rbx
 	mov		rax, -1

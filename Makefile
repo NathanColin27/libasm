@@ -6,7 +6,7 @@
 #    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/16 11:10:58 by nathan            #+#    #+#              #
-#    Updated: 2021/02/18 18:25:39 by nathan           ###   ########.fr        #
+#    Updated: 2021/02/19 18:59:00 by nathan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,7 @@ ASMFLAGS	= -f elf64 -D__LINUX__=1
 AR			= ar rcs
 
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra
+CFLAGS		= -Wall -Werror -Wextra -no-pie
 
 SRCS 		=	srcs/ft_strlen.s \
 				srcs/ft_strcmp.s \

@@ -1,6 +1,6 @@
-extern _ft_strlen
-extern _ft_strcpy
-extern _malloc
+extern ft_strlen
+extern ft_strcpy
+extern malloc
 extern ___error
 
 global ft_strdup
@@ -12,18 +12,18 @@ global ft_strdup
 ; Inputs: RDI = char *s1
 ; Return: RAX = char *
 ft_strdup:
-	call	_ft_strlen
+	call	ft_strlen
 	inc		rax
 	push	rdi
 	mov		rdi, rax
-	call	_malloc
+	call	malloc wrt ..plt
 	pop		rdi
 	cmp		rax, 0
-	je		_ft_strdup_error
+	je		ft_strdup_error
 	mov		rsi, rdi
 	mov		rdi, rax
-	call	_ft_strcpy
+	call	ft_strcpy
 	ret
 
-_ft_strdup_error:
+ft_strdup_error:
 	ret

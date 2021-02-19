@@ -4,6 +4,7 @@ global ft_strcmp
 ;
 ; Inputs: RDI = char *s1, RSI = char *s2
 ; Return: RAX = int
+
 ft_strcmp:
 	push	rbx
 	push	rcx
