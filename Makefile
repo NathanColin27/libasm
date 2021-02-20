@@ -6,19 +6,19 @@
 #    By: nathan <nathan@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/02/16 11:10:58 by nathan            #+#    #+#              #
-#    Updated: 2021/02/19 18:59:00 by nathan           ###   ########.fr        #
+#    Updated: 2021/02/20 08:51:12 by nathan           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= libasm.a
 
 ASM			= nasm
-ASMFLAGS	= -f elf64 -D__LINUX__=1
+ASMFLAGS	= -f elf64
 
 AR			= ar rcs
 
 CC			= gcc
-CFLAGS		= -Wall -Werror -Wextra -no-pie
+CFLAGS		= -Wall -Werror -Wextra
 
 SRCS 		=	srcs/ft_strlen.s \
 				srcs/ft_strcmp.s \
@@ -46,11 +46,12 @@ $(NAME): $(OBJS)
 	@echo "\033[32;1m\rLibasm compiled ${TICK}          \033[0m"
 
 test: $(NAME)
-	$(CC) $(CFLAGS) main.c $(NAME)
+	$(CC) $(CFLAGS) main.c $(NAME) -o test
 	@echo "\033[32;1m\rTest compiled ${TICK}          \033[0m"
 
 clean:
 	rm -rf $(OBJS)
+	rm -rf test
 	@echo "\033[32;1m\rDirectory cleaned ${TRASH}          \033[0m"
 
 fclean:	clean

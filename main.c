@@ -4,35 +4,37 @@
 #include <unistd.h>
 #include "libasm.h"
 #include <error.h>
+#include <fcntl.h>
 
 void test_strlen(void)
 {
 	printf("\n\n*********************\n");
 	printf("* TESTING FT_STRLEN *\n");
 	printf("*********************\n\n");
+
+	printf("Test = \"\"\n");
 	printf("[SYSTEM]: [%ld]\n", strlen(""));
 	printf("[LIBASM]: [%ld]\n\n", ft_strlen(""));
 	
+	printf("Test = \"\\\"\n");
 	printf("[SYSTEM]: [%ld]\n", strlen("\\"));
 	printf("[LIBASM]: [%ld]\n\n", ft_strlen("\\"));
 	
-	printf("[SYSTEM]: [%ld]\n", strlen("Il était une fois"));
-	printf("[LIBASM]: [%ld]\n\n", ft_strlen("Il était une fois"));
+	printf("Test = \"strlen goes brrrrrrrrrrrr\"\n");
+	printf("[SYSTEM]: [%ld]\n", strlen("strlen goes brrrrrrrrrrrr"));
+	printf("[LIBASM]: [%ld]\n\n", ft_strlen("strlen goes brrrrrrrrrrrr"));
 	
-	printf("[SYSTEM]: [%ld]\n", strlen("Une petite mandarine"));
-	printf("[LIBASM]: [%ld]\n\n", ft_strlen("Une petite mandarine"));
-	
+	printf("Test = \"42\"\n");
 	printf("[SYSTEM]: [%ld]\n", strlen("42"));
 	printf("[LIBASM]: [%ld]\n\n", ft_strlen("42"));
 	
+	printf("Test = \"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\"\n");
 	printf("[SYSTEM]: [%ld]\n", strlen("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"));
 	printf("[LIBASM]: [%ld]\n\n", ft_strlen("eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"));
 	
+	printf("Test = \"Lourd, léger, professionnel\"\n");
 	printf("[SYSTEM]: [%ld]\n", strlen("Lourd, léger, professionnel"));
 	printf("[LIBASM]: [%ld]\n\n", ft_strlen("Lourd, léger, professionnel"));
-	
-	printf("[SYSTEM]: [%ld]\n", strlen("Parce que tuuuunnel"));
-	printf("[LIBASM]: [%ld]\n\n", ft_strlen("Parce que tuuuunnel"));
 }
 
 void test_strcpy(void)
@@ -115,6 +117,56 @@ void test_read(void)
 	printf("\n\n*******************\n");
 	printf("* TESTING FT_READ *\n");
 	printf("*******************\n\n");
+
+	int fd_system;
+	int fd_libasm;
+	int fd_test;
+	char *buffer_system;
+	char *buffer_libasm;
+	buffer_system = malloc(100);
+	buffer_libasm = malloc(100);
+
+	printf("Reading libasm.h\n");
+	fd_system = open("libasm.h", O_RDONLY);
+	fd_libasm = open("libasm.h", O_RDONLY);
+	fd_test = read(fd_system, buffer_system, 80);
+	printf("[SYSTEM] :	fd -> %d\n		buffer -> %s\n", fd_test, buffer_system);
+
+	fd_test = ft_read(fd_libasm, buffer_libasm, 80);
+	printf("\n[LIBASM] :	fd -> %d\n		buffer -> %s\n", fd_test, buffer_libasm);
+
+	free(buffer_system);
+	free(buffer_libasm);
+	buffer_system = malloc(100);
+	buffer_libasm = malloc(100);
+
+	printf("\n\nReading non-existing file\n");
+	fd_system = open("42", O_RDONLY);
+	fd_test = read(fd_system, buffer_system, 80);
+	printf("[SYSTEM] fd : %d\n", fd_system);
+	perror("[SYSTEM] errno ");
+
+	fd_libasm = open("42", O_RDONLY);
+	fd_test = ft_read(fd_libasm, buffer_libasm, 80);
+	printf("[LIBASM] fd : %d\n", fd_libasm);
+	perror("[LIBASM] errno ");
+
+	free(buffer_system);
+	free(buffer_libasm);
+
+	printf("\n\nReading from unallocated space\n");
+	buffer_system = "";
+	buffer_libasm = "";
+
+	fd_system = open("libasm.h", O_RDONLY);
+	fd_test = read(fd_system, buffer_system, 80);
+	printf("[SYSTEM] fd : %d\n", fd_system);
+	perror("[SYSTEM] errno ");
+
+	fd_libasm = open("libasm.h", O_RDONLY);
+	fd_test = ft_read(fd_libasm, buffer_libasm, 80);
+	printf("[LIBASM] fd : %d\n", fd_libasm);
+	perror("[LIBASM] errno ");
 }
 
 void test_strcmp(void)
@@ -122,6 +174,9 @@ void test_strcmp(void)
 	printf("\n\n*********************\n");
 	printf("* TESTING FT_STRCMP *\n");
 	printf("*********************\n\n");
+
+	printf("NOTE:\n");
+	printf("The return value from strcmp is 0 if the two strings are equal,\nless than 0 if str1 compares less than str2 , and greater than\n0 if str1 compares greater than str2 . No other assumptions should\nbe made about the value returned by strcmp. \n\n");
 	
 	printf("[SYSTEM]: %i\n", strcmp("", ""));
 	printf("[LIBASM]: %i\n\n", ft_strcmp("",""));
@@ -198,4 +253,5 @@ int	main(void)
 	test_read();
 	test_strcmp();
 	test_strdup();
+	return (0);
 }
